@@ -5,38 +5,35 @@ using namespace std;
 
 // } Driver Code Ends
 class Solution{
-    private:
-    long long int dp[1001][1001];
-    const int mod = 1e9+7;
-    long long int f(int i,int j,string&str){
-        if(i>j){
-            return 0;
-        }
-        
-        if(i==j){
-            return 1;
-        }
-        
-        if(dp[i][j]!=-1){
-            return dp[i][j];
-        }
-        
-        if(str[i]==str[j]){
-            return dp[i][j] = (1 + f(i+1,j,str)+f(i,j-1,str))%mod;
-        }else{
-            return dp[i][j] = (f(i+1,j,str)+f(i,j-1,str)-f(i+1,j-1,str)+mod)%mod;
-        }
-    }
     public:
     /*You are required to complete below method */
     long long int  countPS(string str)
     {
        //Your code here
-       int n = str.length();
+       int n = str.size();
        
-       memset(dp,-1,sizeof(dp));
+       const int mod = 1e9+7;
        
-       return f(0,n-1,str);
+       long long int dp[n+2][n+2];
+       
+       memset(dp,0,sizeof(dp));
+       
+       for(int i = 0;i<n;i++){
+           dp[i][i] = 1;
+       }
+       
+       for(int len = 2;len<=n;len++){
+           for(int i = 0;i<=n-len;i++){
+               int j = i + len - 1;
+               if(str[i]==str[j]){
+                   dp[i][j] = (1 + dp[i+1][j]+dp[i][j-1])%mod;;
+               }else{
+                   dp[i][j] = (dp[i+1][j]+dp[i][j-1]-dp[i+1][j-1] + mod)%mod;
+               }
+           }
+       }
+       
+       return dp[0][n-1]%mod;
     }
      
 };
