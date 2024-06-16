@@ -4,53 +4,52 @@ using namespace std;
 
 
 // } Driver Code Ends
-
-
-
-
 class Solution {
   public:
-    bool check(double mid, vector<int>&arr, int k){
-        int n=arr.size();
-        int count=0;
-        for(int i=1;i<n;i++){
-            int dist=arr[i]-arr[i-1];
-            if(dist<=mid){
-                continue;
+    int cal(vector<int>&arr,long double dist){
+        int cnt = 0;
+        
+        for(int i = 1;i<arr.size();i++){
+            int numberInBet = (arr[i]-arr[i-1])/dist;
+            if((arr[i]-arr[i-1])==dist*numberInBet){
+                numberInBet--;
             }
-            else{
-                count+=int(dist/mid);
-            }
+            
+            cnt += numberInBet;
+            
         }
-        return count<=k;
+        return cnt;
     }
-  
     double findSmallestMaxDist(vector<int> &stations, int k) {
         // Code here
-        int n=stations.size();
-        double lo=0.0;
-        double hi=0.0;
-        for(int i=1;i<n;i++){
-            if(hi<stations[i]-stations[i-1]){
-                hi=stations[i]-stations[i-1];
-            }
+        int n = stations.size();
+        
+        long double low = 0;
+        long double high = 0;
+        
+        for(int i = 0;i<n-1;i++){
+            high = max(high,(long double)stations[i+1]-stations[i]);
         }
-        double ans=hi;
-        while(hi-lo>1e-9){
-            double mid= (hi-lo)/2.0 + lo;
-            if(check(mid, stations, k)){
-                ans=mid;
-                hi=mid;
+        
+        long double diff = 1e-6;
+        long double ans = high;
+        
+        while(high-low>diff){
+            long double mid = low + (high-low)/2.0;
+            int cnt = cal(stations,mid);
+            
+            if(cnt>k){
+                low = mid;
             }
             else{
-                lo=mid;
+                ans = mid;
+                high = mid;
             }
         }
+        
         return ans;
     }
 };
-        
-
 
 //{ Driver Code Starts.
 int main() {
