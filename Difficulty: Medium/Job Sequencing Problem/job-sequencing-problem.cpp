@@ -23,6 +23,46 @@ struct Job
 };
 */
 
+class DSU{
+    public:
+    vector<int> parent, size;
+    DSU(int n){
+        parent.resize(n+1);
+        size.resize(n+1);
+        
+        for(int i = 0;i<n+1;i++){
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+    
+    int find(int node){
+        if(node==parent[node]){
+            return node;
+        }
+        
+        return parent[node] = find(parent[node]);
+    }
+    
+    void unionBySize(int u,int v){
+        int pu = find(u);
+        int pv = find(v);
+        
+        
+        if(pu==pv){
+            return;
+        }
+        
+        
+        if(pu<pv){
+            parent[pv] = pu;
+        }
+        else{
+            parent[pu] = pv;
+        }
+    }
+};
+
 class Solution 
 {
     public:
@@ -43,18 +83,24 @@ class Solution
             maxDeadline = max(maxDeadline,arr[i].dead);
         }
         
-        vector<int> hash(maxDeadline + 1,-1);
+        DSU ds(maxDeadline);
         
         for(int i = 0;i<n;i++){
-            for(int j = arr[i].dead;j>=1;j--){
-                if(hash[j]==-1){
-                    cnt++;
-                    totProfit += arr[i].profit;
-                    hash[j] = arr[i].id;
-                    break;
-                }
+            int node = ds.find(arr[i].dead);
+            
+            // cout<<"Node : "<<node<<"\n";
+            
+            if(node>0){
+                cnt++;
+                totProfit += arr[i].profit;
+                
+                ds.unionBySize(node-1,node);
             }
         }
+        
+        // for(auto it : ds.parent){
+        //     cout<<it<<"\n";
+        // }
         
         return {cnt,totProfit};
     } 
