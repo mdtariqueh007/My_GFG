@@ -20,7 +20,7 @@ class Solution {
         while(j<n){
             mp[arr[j]]++;
             
-            while(mp.size()>2){
+            if(mp.size()>2){
                 mp[arr[i]]--;
                 if(mp[arr[i]]==0){
                     mp.erase(arr[i]);
@@ -28,7 +28,8 @@ class Solution {
                 i++;
             }
             
-            ans = max(ans,j - i  +1);
+            if(mp.size()<=2)
+                ans = max(ans,j - i  +1);
             j++;
         }
         
@@ -37,6 +38,7 @@ class Solution {
         
     }
 };
+
 
 //{ Driver Code Starts.
 
