@@ -93,37 +93,53 @@ struct Node {
 };
 */
 class Solution {
+    private:
+    void inorder(Node* root,vector<int>&ans){
+        if(root==NULL){
+            return;
+        }
+        
+        inorder(root->left,ans);
+        ans.push_back(root->data);
+        inorder(root->right,ans);
+    }
   public:
     // Function to return a list of integers denoting the node
     // values of both the BST in a sorted order.
-    void merge(Node *root, vector<int>&v)
-      {
-          if(root==NULL)
-          return;
-          merge(root->left,v);
-          v.push_back(root->data);
-          merge(root->right,v);
-      }
     vector<int> merge(Node *root1, Node *root2) {
-        vector<int>v1,v2,count;
-        merge(root1,v1);
-        merge(root2,v2);
-        int i=0,j=0;
-        while(i<v1.size() && j<v2.size())
-        {
-            if(v1[i]<=v2[j])
-            count.push_back(v1[i++]);
-            else
-            count.push_back(v2[j++]);
+        // Your code here
+        vector<int> ans1, ans2;
+        
+        inorder(root1,ans1);
+        inorder(root2,ans2);
+        
+        int i = 0;
+        int j = 0;
+        
+        vector<int> res;
+        
+        while(i<ans1.size() && j<ans2.size()){
+            if(ans1[i]<=ans2[j]){
+                res.push_back(ans1[i]);
+                i++;
+            }
+            else{
+                res.push_back(ans2[j]);
+                j++;
+            }
         }
-        while(i<v1.size())
-        count.push_back(v1[i++]);
-        while(j<v2.size())
-        count.push_back(v2[j++]);
-      return count;
+        
+        while(i<ans1.size()){
+            res.push_back(ans1[i]);
+            i++;
+        }
+        while(j<ans2.size()){
+            res.push_back(ans2[j]);
+            j++;
+        }
+        
+        return res;
     }
-
-
 };
 
 //{ Driver Code Starts.
